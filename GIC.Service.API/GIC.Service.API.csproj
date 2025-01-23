@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GIC.Core.Application\GIC.Core.Application.csproj" />
+    <ProjectReference Include="..\GIC.Core.Domain\GIC.Core.Domain.csproj" />
     <ProjectReference Include="..\GIC.Infrastructure\GIC.Infrastructure.csproj" />
   </ItemGroup>
 

@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApplicationInfrastructure",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DistributedServices", "DistributedServices", "{F52B5061-4C22-4050-936C-6F1BB754CA5E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{13EF1599-8EF5-4B85-B771-7C77CB3EF96D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GIC.Infrastructure", "GIC.Infrastructure\GIC.Infrastructure.csproj", "{5B4DA187-1C61-479E-B20F-049A516E2CE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GIC.Service.API", "GIC.Service.API\GIC.Service.API.csproj", "{638A2C6E-21F1-4B21-955F-FCBF7792B4AA}"
