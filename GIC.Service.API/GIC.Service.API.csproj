@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GIC.Application\GIC.Core.Application.csproj" />
+    <ProjectReference Include="..\GIC.Core.Application\GIC.Core.Application.csproj" />
     <ProjectReference Include="..\GIC.Infrastructure\GIC.Infrastructure.csproj" />
   </ItemGroup>
 

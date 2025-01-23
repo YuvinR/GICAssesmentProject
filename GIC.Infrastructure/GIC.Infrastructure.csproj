@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GIC.Application\GIC.Core.Application.csproj" />
-    <ProjectReference Include="..\GIC.Test.Core\GIC.Core.Domain.csproj" />
+    <ProjectReference Include="..\GIC.Core.Application\GIC.Core.Application.csproj" />
+    <ProjectReference Include="..\GIC.Core.Domain\GIC.Core.Domain.csproj" />
   </ItemGroup>
 
 </Project>
