@@ -1,0 +1,6 @@
+@GIC.Service.API_HostAddress = http://localhost:5008
+
+GET {{GIC.Service.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
