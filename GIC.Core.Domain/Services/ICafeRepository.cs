@@ -13,5 +13,6 @@ namespace GIC.Core.Domain.Services
         Task AddAsync(Cafe cafe);
         Task<List<CafeModel>> GetByLocationAsync(string? location);
         Task PutAsync(Cafe cafe);
+        Task DeleteAsync(Guid id);
     }
 }

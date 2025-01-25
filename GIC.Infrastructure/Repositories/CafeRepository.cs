@@ -51,5 +51,32 @@ namespace GIC.Infrastructure.Repositories
             _context.Cafe.Update(cafe);
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var sql = @"DELETE FROM dbo.Cafe WHERE Id= @id";
+                var parameters = new[] { new Microsoft.Data.SqlClient.SqlParameter("@id", id) };
+
+                var sql2 = @"DELETE FROM dbo.Employee WHERE Cid= @Cid";
+                var parameters2 = new[] { new Microsoft.Data.SqlClient.SqlParameter("@Cid", id) };
+
+                await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+                await _context.Database.ExecuteSqlRawAsync(sql2, parameters2);
+
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+            }
+            catch (Exception ex)
+            {
+                // Rollback the transaction in case of any error
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

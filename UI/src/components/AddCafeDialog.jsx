@@ -1,14 +1,34 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from "@mui/material";
-import { addCafe } from "../api";
+import { addCafe,updateCafe } from "../api";
 
-const AddCafeDialog = ({ open, onClose, onCafeAdded }) => {
+const AddCafeDialog = ({ open, onClose, onCafeAdded, cafe,isEdit }) => {
   const [cafeData, setCafeData] = useState({
-    logo: "",
-    name: "",
-    description: "",
-    location: "",
+    id: cafe?.id || "",
+    logo: cafe?.logo || "",
+    name: cafe?.name || "",
+    description: cafe?.description || "",
+    location: cafe?.location || "",
   });
+
+  useEffect(() => {
+    if (isEdit && cafe) {
+      setCafeData({
+        id:cafe.id,
+        logo: cafe.logo,
+        name: cafe.name,
+        description: cafe.description,
+        location: cafe.location,
+      });
+    }else{
+      setCafeData({
+        logo: "",
+        name: "",
+        description: "",
+        location: "",
+      });
+    }
+  }, [isEdit, cafe]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,17 +37,25 @@ const AddCafeDialog = ({ open, onClose, onCafeAdded }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await addCafe(cafeData);
-      onCafeAdded(response.data); // Pass the new café data to parent
+      var newCafeData = {
+        "cafeData": cafeData
+      };
+      let response;
+      if (isEdit) {
+        response = await updateCafe(cafe.id, newCafeData); // Assuming updateCafe is an API function to update the café
+      } else {
+        response = await addCafe(newCafeData);
+      }
+      onCafeAdded(response.data); // Pass the new or updated café data to parent
       onClose();
     } catch (error) {
-      console.error("Error adding café:", error);
+      console.error("Error adding or updating café:", error);
     }
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add New Café</DialogTitle>
+      <DialogTitle>{isEdit ? "Edit Café" : "Add New Café"}</DialogTitle>
       <DialogContent>
         <TextField
           name="logo"
@@ -65,7 +93,7 @@ const AddCafeDialog = ({ open, onClose, onCafeAdded }) => {
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
         <Button onClick={handleSubmit} variant="contained" color="primary">
-          Add
+          {cafe ? "Save" : "Add"}
         </Button>
       </DialogActions>
     </Dialog>
