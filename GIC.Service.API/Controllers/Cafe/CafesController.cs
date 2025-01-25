@@ -2,12 +2,13 @@
 using GIC.Core.Application.Features.Cafe.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace GIC.Service.API.Controllers.Cafe
 {
     [ApiController]
-    [Route("api/cafe")]
-    public class CafesController :ControllerBase
+    [Route("api/cafes")]
+    public class CafesController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -17,15 +18,14 @@ namespace GIC.Service.API.Controllers.Cafe
         }
 
         [HttpGet]
-        [Route("location")]
-        public async Task<IActionResult> GetByLocation(string? location =null)
+        public async Task<IActionResult> GetByLocation(string? location = null)
         {
             CreateCafeQuery createCafeQuery = new CreateCafeQuery
             {
                 Location = location
             };
-            var products = await _mediator.Send(createCafeQuery);
-            return Ok(products);
+            var cafes = await _mediator.Send(createCafeQuery);
+            return Ok(cafes);
         }
 
         [HttpPost]
@@ -40,6 +40,17 @@ namespace GIC.Service.API.Controllers.Cafe
         {
             var id = await _mediator.Send(command);
             return Ok(id);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            RemoveCafeCommand command = new RemoveCafeCommand
+            {
+                Id = id
+            };
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

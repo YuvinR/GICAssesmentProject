@@ -14,5 +14,6 @@ namespace GIC.Core.Domain.Services
         Task<List<EmployeeCafeModel>> GetByCafeAsync(Guid cafeId);
         Task AddAsync(Employee employee);
         Task<bool> PutAsync(Employee employee);
+        Task DeleteAsync(string id);
     }
 }

@@ -77,5 +77,15 @@ namespace GIC.Infrastructure.Repositories
                 return false; // Indicate failure
             }
         }
+
+        public async Task DeleteAsync(string id)
+        {
+            var sql = @"DELETE FROM dbo.Employee WHERE Id= @id";
+
+            var parameters = new[] { new Microsoft.Data.SqlClient.SqlParameter("@id", id) };
+
+            await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+
+        }
     }
 }
