@@ -18,18 +18,29 @@ namespace GIC.Service.API.Controllers.Cafe
             _mediator = mediator;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Get()
-        //{
-        //    var products = await _mediator.Send(new GetEmployeeQuery());
-        //    return Ok(products);
-        //}
-
         [HttpPost]
         public async Task<IActionResult> Create(CreateEmployeeCommand command)
         {
+            if (!IsValidEmail(command.EmployeeData.Email))
+            {
+                return BadRequest("Invalid email format.");
+            }
+
             var id = await _mediator.Send(command);
             return CreatedAtAction(nameof(Create), new { id }, id);
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         [HttpGet]

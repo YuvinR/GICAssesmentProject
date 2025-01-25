@@ -6,8 +6,8 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import { getEmployees, deleteEmployee } from "../api";
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
-import { Delete } from "@mui/icons-material";
 import AddEmployeeDialog from './AddEmployeeDialog';
+import { Visibility, Delete } from "@mui/icons-material";
 
 const columns = [
   { field: 'id', headerName: 'Id', width: 200 },
@@ -25,6 +25,7 @@ const EmployeePage = ({ navigateToCafe, id }) => {
   const [employees, setEmployees] = useState([]);
   const [selectedEmp, setSelectedEmp] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,11 +45,13 @@ const EmployeePage = ({ navigateToCafe, id }) => {
   };
 
   const handleAddedOREditedEmployee = (cafe) => {
+    handleClose();
     const fetchData = async () => {
       const response = await getEmployees(id);
       setEmployees(response.data);
     };
     fetchData();
+    
   }
 
   const handleDelete = async (id) => {
@@ -68,6 +71,17 @@ const EmployeePage = ({ navigateToCafe, id }) => {
     handleClickOpen();
   };
 
+  const genderLookup = (gender) => {
+    switch (gender) {
+      case 1:
+        return 'Male';
+      case 2:
+        return 'Female';
+      default:
+        return '-';
+    }
+  };
+
   return (
     <Paper sx={{ height: 800, width: '100%', marginTop: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Typography variant="h4" component="h2" align="center">
@@ -75,7 +89,6 @@ const EmployeePage = ({ navigateToCafe, id }) => {
       </Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '60%', marginTop: 3 }}>
-
         <Button
           variant="outlined"
           color="success"
@@ -85,60 +98,52 @@ const EmployeePage = ({ navigateToCafe, id }) => {
           Back
         </Button>
         <Button
-          variant="contained"
-          color="success"
-          // onClick={() => handleAdd()}
-          sx={{ marginBottom: 2 }}
-        >
-          Add Employee
-        </Button>
-      </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
-        <Paper sx={{ height: 400, width: '60%' }}>
-          <DataGrid
-            rows={employees}
-            columns={[
-              ...columns.map((col) =>
-                col.field === 'employeeCount'
-                  ? {
-                    ...col,
-                    renderCell: (params) => (
+            variant="contained"
+            color="success"
+            onClick={() => handleAdd()}
+            sx={{ marginBottom: 2 }}
+          >
+            Add Employee
+          </Button>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+          <Paper sx={{ height: 400, width: '100%' }}>
+            <DataGrid
+              rows={employees.map(emp => ({ ...emp, gender: genderLookup(emp.gender) }))}
+              columns={[
+                ...columns.map((col) =>
+                  col.field === 'employeeCount'
+                    ? {
+                      ...col
+                    }
+                    : col
+                ),
+                {
+                  field: "actions",
+                  headerName: "Actions",
+                  width: 250,
+                  renderCell: (params) => (
+                    <Box>
                       <Button
-                        variant="text"
-                        onClick={() => navigateToEmployees(params.row.id)}
+                        variant="outlined"
+                        size="small"
+                        sx={{ color: 'blue', borderColor: 'blue' }}
+                        onClick={() => handleEdit(params.row)}
+                        startIcon={<Visibility />}
                       >
-                        {params.value}
+                        Edit
                       </Button>
-                    ),
-                  }
-                  : col
-              ),
-              {
-                field: "actions",
-                headerName: "Actions",
-                width: 250,
-                renderCell: (params) => (
-                  <Box>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: 'blue', borderColor: 'blue' }}
-                      onClick={() => handleEdit(params.row)}
-                      startIcon={<Visibility />}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: 'red', borderColor: 'red' }}
-                      onClick={() => handleDelete(params.row.id)}
-                      startIcon={<Delete />}
-                      style={{ marginLeft: 8 }}
-                    >
-                      Delete
-                    </Button>
-                  </Box>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{ color: 'red', borderColor: 'red' }}
+                        onClick={() => handleDelete(params.row.id)}
+                        startIcon={<Delete />}
+                        style={{ marginLeft: 8 }}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
                 ),
               },
             ]}
@@ -151,7 +156,7 @@ const EmployeePage = ({ navigateToCafe, id }) => {
           />
         </Paper>
       </Box>
-      <AddEmployeeDialog open={open} onClose={handleClose} onEmpAdded={handleAddedOREditedEmployee} emp={selectedEmp} isEdit={isEdit} />
+      <AddEmployeeDialog open={open} onCloseEmp={handleClose} onEmpAdded={handleAddedOREditedEmployee} emp={selectedEmp} isEdit={isEdit} cafeId={id} />
     </Paper>
   );
 };
